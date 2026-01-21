@@ -181,7 +181,7 @@
         return;
       }
       const { data, error } = await supabaseClient
-        .from("rsvp")
+        .from("rsvp2")
         .select("convidados,mensagem,origem,created_at")
         .order("created_at", { ascending: false });
 
