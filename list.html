@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de Presenças</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f9f5ef;
+      --card: #ffffff;
+      --text: #1f1a16;
+      --muted: #6b5c50;
+      --accent: #8a6f4d;
+      --green: #2f6b3a;
+      --red: #a64545;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Montserrat", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 1.4rem;
+      -webkit-font-smoothing: antialiased;
+    }
+    h1 {
+      font-family: "Playfair Display", serif;
+      font-size: 1.8rem;
+      margin-bottom: 0.4rem;
+    }
+    p { color: var(--muted); }
+    .card {
+      background: var(--card);
+      border: 1px solid #eadfd3;
+      border-radius: 14px;
+      padding: 1.2rem 1.1rem;
+      box-shadow: 0 16px 32px rgba(0,0,0,0.06);
+      max-width: 1100px;
+      margin: 1.2rem auto;
+    }
+    .summary {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+    .pill {
+      padding: 0.4rem 0.8rem;
+      border-radius: 999px;
+      background: #f0e6d9;
+      color: var(--text);
+      font-size: 0.9rem;
+      border: 1px solid #e6d7c7;
+    }
+    .pill.green { background: #e4f3e8; border-color: #c7e3cf; color: var(--green); }
+    .pill.red { background: #f7e4e4; border-color: #e8c6c6; color: var(--red); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.6rem;
+      font-size: 0.95rem;
+    }
+    th, td {
+      padding: 0.65rem 0.5rem;
+      text-align: left;
+      border-bottom: 1px solid #eee4d7;
+    }
+    th { font-weight: 600; color: var(--muted); }
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.25rem 0.55rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      border: 1px solid transparent;
+    }
+    .status.accept { background: #e4f3e8; color: var(--green); border-color: #c7e3cf; }
+    .status.decline { background: #f7e4e4; color: var(--red); border-color: #e8c6c6; }
+    .tag { font-size: 0.82rem; color: var(--muted); }
+    .small { font-size: 0.85rem; color: var(--muted); }
+    .error { color: var(--red); margin-top: 0.6rem; }
+    .loading { color: var(--muted); margin-top: 0.6rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Lista de Presenças</h1>
+    <p>Visualize quem aceitou ou recusou.</p>
+  </header>
+
+  <section class="card">
+    <div class="summary" id="summary"></div>
+    <div id="loading" class="loading">Carregando...</div>
+    <div id="error" class="error" style="display:none;"></div>
+    <table id="table" style="display:none;">
+      <thead>
+        <tr>
+          <th>Convidado</th>
+          <th>Status</th>
+          <th>Mensagem</th>
+          <th>Origem</th>
+          <th>Data</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = "https://jlkelwndkdsqlltjtamq.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_HLEnnvbxQt7jHzHhThK9bw_PzcdI2F2";
+    const hasRealConfig =
+      SUPABASE_URL && SUPABASE_ANON_KEY &&
+      !SUPABASE_URL.includes("SEU_PROJETO") &&
+      !SUPABASE_ANON_KEY.includes("SUA_CHAVE");
+    const supabaseClient =
+      window?.supabase && hasRealConfig
+        ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+        : null;
+
+    const tbody = document.getElementById("tbody");
+    const table = document.getElementById("table");
+    const loading = document.getElementById("loading");
+    const errorBox = document.getElementById("error");
+    const summaryBox = document.getElementById("summary");
+
+    const setError = (msg) => {
+      errorBox.textContent = msg;
+      errorBox.style.display = "block";
+    };
+
+    const fmtDate = (iso) => {
+      if (!iso) return "";
+      const d = new Date(iso);
+      return d.toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" });
+    };
+
+    const buildSummary = (rows) => {
+      const guests = rows.flatMap((row) => row.convidados || []);
+      const accepted = guests.filter((g) => g.status === "aceito").length;
+      const declined = guests.filter((g) => g.status === "recusado").length;
+      const total = guests.length;
+      summaryBox.innerHTML = `
+        <span class="pill">Total convidados: ${total}</span>
+        <span class="pill green">Aceitos: ${accepted}</span>
+        <span class="pill red">Recusados: ${declined}</span>
+      `;
+    };
+
+    const renderRows = (rows) => {
+      tbody.innerHTML = "";
+      if (!rows.length) {
+        tbody.innerHTML = `<tr><td colspan="5" class="small">Nenhum registro encontrado.</td></tr>`;
+        return;
+      }
+      rows.forEach((row) => {
+        const message = row.mensagem || "";
+        const origem = row.origem || "-";
+        (row.convidados || []).forEach((guest) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${guest.nome || "-"}</td>
+            <td><span class="status ${guest.status === "aceito" ? "accept" : "decline"}">${guest.status === "aceito" ? "Aceito" : "Recusado"}</span></td>
+            <td class="small">${message}</td>
+            <td class="small">${origem}</td>
+            <td class="small">${fmtDate(row.created_at)}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      });
+    };
+
+    const load = async () => {
+      if (!supabaseClient) {
+        loading.style.display = "none";
+        setError("Configure o SUPABASE_URL e SUPABASE_ANON_KEY.");
+        return;
+      }
+      const { data, error } = await supabaseClient
+        .from("rsvp")
+        .select("convidados,mensagem,origem,created_at")
+        .order("created_at", { ascending: false });
+
+      loading.style.display = "none";
+
+      if (error) {
+        console.error("Supabase list error:", error);
+        setError(error.message || "Não foi possível carregar.");
+        return;
+      }
+      buildSummary(data || []);
+      renderRows(data || []);
+      table.style.display = "table";
+    };
+
+    load();
+  </script>
+</body>
+</html>
+

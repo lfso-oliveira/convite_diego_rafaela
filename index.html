@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Larissa & Felipe</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="hero">
+    <div class="hero__content">
+      <p class="hero__title">Convite</p>
+      <img class="hero__logo" src="larissa.png" alt="Larissa & Felipe">
+    </div>
+  </header>
+
+  <main>
+    <section class="parents">
+      <p class="parents__intro">Com a bênção de Jeová e de seus pais</p>
+      
+      <div class="parents__grid">
+        <div class="parents__col">
+          <p>Rildo de Oliveira Faria</p>
+          <p>Maria Perpétua de Freitas Faria</p>
+        </div>
+
+        <div class="parents__divider"></div>
+
+        <div class="parents__col">
+          <p>Valdomiro José da Silva</p>
+          <p>Eulane Pires de Araújo Silva</p>
+        </div>
+      </div>
+
+     
+    </section>
+
+    <section class="photo-section" aria-label="Mãos entrelaçadas">
+      <img class="photo-section__img" src="Diego 2.png" alt="Mãos entrelaçadas">
+    </section>
+
+    <section class="invite">
+      <p class="invite__intro">É COM IMENSA ALEGRIA QUE CONVIDAMOS VOCÊ PARA COMEMORAR ESSE MOMENTO ÚNICO</p>
+      <p class="invite__date">18.04.26</p>
+      <p class="invite__time">SÁBADO ÀS 17:00H</p>
+    </section>
+
+    <section class="gallery" aria-label="Galeria de momentos">
+      <div class="swiper mySwiper">
+        <div class="swiper-wrapper">
+          <div class="swiper-slide">
+            <img src="diego4.jpeg" alt="Larissa e Felipe caminhando">
+          </div>
+          <div class="swiper-slide">
+            <img src="diego6.jpeg" alt="Larissa e Felipe abraçados">
+          </div>
+          <div class="swiper-slide">
+            <img src="diego5.jpeg" alt="Detalhe das alianças">
+          </div>
+        </div>
+        <div class="swiper-pagination"></div>
+      </div>
+    </section>
+
+    <section class="location" aria-label="Local da cerimônia e recepção">
+      <div class="location__card">
+        <p class="location__script">LOCAL</p>
+        <p class="location__eyebrow">Cerimônia & Recepção</p>
+        <h2 class="location__name">AR' conquista</h2>
+        <p class="location__address">MG-341, KM 05 - São Roque de Minas</p>
+        <div class="location__line"></div>
+        <div class="location__actions">
+          <a class="location__btn" href="https://www.google.com/maps/place/AR'+conquista/@-20.2516522,-46.3541809,504m/data=!3m1!1e3!4m6!3m5!1s0x94b151e6dfd2b351:0x841e7e06b3e42a86!8m2!3d-20.2517343!4d-46.3525046!16s%2Fg%2F11t9r5hk6q?entry=ttu&g_ep=EgoyMDI2MDExMS4wIKXMDSoASAFQAw%3D%3D" aria-label="Ver localização">Localização</a>
+          
+          <a class="location__btn" href="#" data-open-rsvp aria-label="Confirmar presença">Confirmação de presença</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="end-photo" aria-label="Foto final">
+      <img class="end-photo__img" src="diego3.png" alt="Larissa e Felipe">
+    </section>
+  </main>
+
+  <div id="rsvp-modal" class="modal" aria-hidden="true">
+    <div class="modal__overlay" data-close-rsvp aria-hidden="true"></div>
+    <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="rsvp-title">
+      <button class="modal__close" type="button" data-close-rsvp aria-label="Fechar confirmação">×</button>
+      
+      <div class="modal__content">
+        <div class="section__header">
+          <p class="eyebrow">R.S.V.P.</p>
+          <h2 id="rsvp-title">Confirme sua presença</h2>
+          <p>Por favor, confirme quem poderá comparecer ao nosso grande dia.</p>
+        </div>
+
+        <form id="rsvp-form" class="rsvp" autocomplete="on">
+          <div class="rsvp__list">
+            <div class="rsvp__guests" id="guest-list"></div>
+          </div>
+          <button id="rsvp-submit" type="submit" class="btn btn--primary btn--full">
+            Enviar Confirmação
+          </button>
+          <p id="rsvp-feedback" class="rsvp__feedback" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <section class="audio-player" aria-label="Trilha sonora">
+    <div id="audio-pill" class="audio-visualizer" role="button" tabindex="0" aria-label="Tocar ou pausar música">
+      <div class="audio-icon">
+        <svg class="icon-play" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        <svg class="icon-pause" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+      </div>
+      <div class="audio-content">
+        <span class="audio-track">Soulmate</span>
+        <canvas id="music-visualizer" width="100" height="12" aria-hidden="true"></canvas>
+      </div>
+    </div>
+    <audio id="bg-music" src="Soulmate - Andrea Vanzo (youtube).mp3" loop preload="auto" playsinline></audio>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Swiper
+      const swiper = new Swiper(".mySwiper", {
+        effect: "coverflow",
+        grabCursor: true,
+        centeredSlides: true,
+        slidesPerView: "auto",
+        initialSlide: 1,
+        coverflowEffect: { rotate: 40, stretch: 0, depth: 100, modifier: 1, slideShadows: true },
+        pagination: { el: ".swiper-pagination", clickable: true },
+        autoplay: { delay: 3000, disableOnInteraction: false },
+        loop: true
+      });
+
+      // Audio
+      const audio = document.getElementById("bg-music");
+      const canvas = document.getElementById("music-visualizer");
+      const pill = document.getElementById("audio-pill");
+      const ctx = canvas?.getContext("2d");
+      
+      if (audio && canvas && ctx && pill) {
+        let audioCtx, analyser, dataArray, animationId, setupDone = false;
+        const setPlayingState = (isPlaying) => pill.classList.toggle("is-playing", isPlaying);
+
+        // Configurar volume padrão
+        audio.volume = 0.5;
+
+        // Tratamento de erros de carregamento do áudio com fallback
+        let triedFallback = false;
+        const originalSrc = audio.src;
+        
+        const tryFallback = () => {
+          if (!triedFallback) {
+            triedFallback = true;
+            console.log('Arquivo Soulmate não carregou. Tentando usar musica.mp3...');
+            audio.src = 'musica.mp3';
+            audio.load();
+          }
+        };
+
+        audio.addEventListener('error', (e) => {
+          const error = audio.error;
+          if (error) {
+            console.error('Erro ao carregar áudio:', error.code, error.message);
+            // Código 4 = MEDIA_ERR_SRC_NOT_SUPPORTED (formato não suportado ou arquivo corrompido)
+            if (error.code === 4 || audio.src.includes('Soulmate')) {
+              tryFallback();
+            }
+          }
+        });
+
+        // Verificar se o arquivo carregou após um tempo
+        audio.addEventListener('loadstart', () => {
+          console.log('Iniciando carregamento:', audio.src);
+        });
+
+        audio.addEventListener('loadeddata', () => {
+          console.log('Áudio carregado com sucesso:', audio.src);
+        });
+
+        audio.addEventListener('canplay', () => {
+          console.log('Áudio pronto para tocar');
+        });
+
+        // Se após 3 segundos não carregou, tentar fallback
+        setTimeout(() => {
+          if (audio.readyState < 2 && !triedFallback && audio.src.includes('Soulmate')) {
+            console.log('Timeout: arquivo não carregou a tempo. Tentando fallback...');
+            tryFallback();
+          }
+        }, 3000);
+
+        const setupAudioGraph = () => {
+          if (setupDone) return;
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+          analyser = audioCtx.createAnalyser();
+          analyser.fftSize = 256;
+          const source = audioCtx.createMediaElementSource(audio);
+          source.connect(analyser);
+          analyser.connect(audioCtx.destination);
+          dataArray = new Uint8Array(analyser.frequencyBinCount);
+          setupDone = true;
+        };
+
+        const draw = () => {
+          if (!analyser) return;
+          const { width, height } = canvas;
+          ctx.clearRect(0, 0, width, height);
+          analyser.getByteFrequencyData(dataArray);
+          const barCount = 20; 
+          const step = Math.floor(dataArray.length / barCount);
+          const barWidth = width / barCount;
+          for (let i = 0; i < barCount; i++) {
+            const value = dataArray[i * step] / 255;
+            const barHeight = Math.max(4, value * height);
+            const x = i * barWidth;
+            const y = (height - barHeight) / 2;
+            ctx.fillStyle = "#534437";
+            ctx.fillRect(x + 1, y, barWidth - 2, barHeight);
+          }
+          animationId = requestAnimationFrame(draw);
+        };
+
+        const togglePlayback = async () => {
+          try {
+            setupAudioGraph();
+            if (audio.paused) {
+              if (audioCtx.state === 'suspended') {
+                await audioCtx.resume();
+              }
+              await audio.play();
+              if(animationId) cancelAnimationFrame(animationId);
+              draw();
+              setPlayingState(true);
+            } else {
+              audio.pause();
+              setPlayingState(false);
+            }
+          } catch (err) { 
+            console.error('Erro ao tocar áudio:', err);
+            setPlayingState(false); 
+          }
+        };
+
+        pill.addEventListener("click", togglePlayback);
+        
+        // Tentar iniciar automaticamente (pode falhar devido a políticas do navegador)
+        audio.play().catch(() => {
+          // Autoplay bloqueado - aguardar interação do usuário
+        });
+        
+        // Iniciar na primeira interação do usuário
+        ["click", "touchstart", "keydown"].forEach((evt) => {
+          window.addEventListener(evt, async () => { 
+            if (audio.paused) {
+              await togglePlayback(); 
+            }
+          }, { once: true, passive: true });
+        });
+      }
+
+      // RSVP
+      const modal = document.getElementById("rsvp-modal");
+      const openers = document.querySelectorAll("[data-open-rsvp]");
+      const closers = modal?.querySelectorAll("[data-close-rsvp]");
+      const form = document.getElementById("rsvp-form");
+      const guestList = document.getElementById("guest-list");
+      const feedback = document.getElementById("rsvp-feedback");
+      const submitBtn = document.getElementById("rsvp-submit");
+      
+      const parseGuestsFromUrl = () => {
+        const params = new URLSearchParams(window.location.search.replace(/^\?/, ""));
+        const names = [];
+        params.forEach((v, k) => {
+            if(v) v.split(/[,|]/).forEach(n => names.push(decodeURIComponent(n.trim())));
+            if(k && !v) names.push(decodeURIComponent(k.trim()));
+        });
+        window.location.search.replace(/^\?/, "").split("&").forEach(part => {
+             if(!part.includes("=") && part) names.push(decodeURIComponent(part));
+        });
+        return [...new Set(names.filter(Boolean))];
+      };
+
+      const createGuestRow = (index, name) => {
+        const div = document.createElement("div");
+        div.className = "rsvp__guest";
+        div.dataset.status = "aceito";
+        div.innerHTML = `
+          <input type="text" name="guest_name" value="${name}" class="guest-input" placeholder="Nome do convidado">
+          <div class="rsvp__actions">
+             <button type="button" class="rsvp__toggle is-accept is-active">
+               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+             </button>
+             <button type="button" class="rsvp__toggle is-decline">
+               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+             </button>
+          </div>
+        `;
+        const btns = div.querySelectorAll(".rsvp__toggle");
+        btns.forEach(btn => {
+            btn.addEventListener("click", () => {
+                const isAccept = btn.classList.contains("is-accept");
+                div.dataset.status = isAccept ? "aceito" : "recusado";
+                btns.forEach(b => b.classList.remove("is-active"));
+                btn.classList.add("is-active");
+                div.querySelector("input").style.opacity = isAccept ? "1" : "0.5";
+                div.querySelector("input").style.textDecoration = isAccept ? "none" : "line-through";
+            });
+        });
+        return div;
+      };
+
+      const openModal = () => {
+        if(!modal) return;
+        modal.classList.add("is-open");
+        modal.setAttribute("aria-hidden", "false");
+        if(guestList && guestList.children.length === 0) {
+            const names = parseGuestsFromUrl();
+            if(names.length === 0) names.push(""); 
+            names.forEach((n, i) => guestList.appendChild(createGuestRow(i, n)));
+        }
+      };
+
+      const closeModal = () => {
+        modal?.classList.remove("is-open");
+        modal?.setAttribute("aria-hidden", "true");
+      };
+
+      openers.forEach(el => el.addEventListener("click", (e) => { e.preventDefault(); openModal(); }));
+      closers?.forEach(el => el.addEventListener("click", closeModal));
+
+      form?.addEventListener("submit", (e) => {
+        e.preventDefault();
+        feedback.textContent = "Enviando...";
+        submitBtn.disabled = true;
+        setTimeout(() => {
+            feedback.textContent = "Confirmado com sucesso! Obrigado ❤";
+            feedback.dataset.status = "success";
+            submitBtn.textContent = "Enviado";
+        }, 1000);
+      });
+    });
+  </script>
+</body>
+</html>
