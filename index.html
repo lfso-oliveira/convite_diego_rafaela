@@ -272,6 +272,11 @@
         });
       }
 
+      // Supabase Config
+      const SUPABASE_URL = "https://jlkelwndkdsqlltjtamq.supabase.co";
+      const SUPABASE_ANON_KEY = "sb_publishable_HLEnnvbxQt7jHzHhThK9bw_PzcdI2F2";
+      const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
       // RSVP
       const modal = document.getElementById("rsvp-modal");
       const openers = document.querySelectorAll("[data-open-rsvp]");
@@ -342,15 +347,54 @@
       openers.forEach(el => el.addEventListener("click", (e) => { e.preventDefault(); openModal(); }));
       closers?.forEach(el => el.addEventListener("click", closeModal));
 
-      form?.addEventListener("submit", (e) => {
+      form?.addEventListener("submit", async (e) => {
         e.preventDefault();
         feedback.textContent = "Enviando...";
         submitBtn.disabled = true;
-        setTimeout(() => {
-            feedback.textContent = "Confirmado com sucesso! Obrigado ❤";
-            feedback.dataset.status = "success";
-            submitBtn.textContent = "Enviado";
-        }, 1000);
+
+        const guests = [];
+        const guestRows = guestList.querySelectorAll(".rsvp__guest");
+        guestRows.forEach(row => {
+          const nameInput = row.querySelector("input[name='guest_name']");
+          const status = row.dataset.status;
+          if (nameInput && nameInput.value.trim()) {
+            guests.push({
+              nome: nameInput.value.trim(),
+              status: status
+            });
+          }
+        });
+
+        if (guests.length === 0) {
+          feedback.textContent = "Por favor, preencha pelo menos um nome.";
+          submitBtn.disabled = false;
+          return;
+        }
+
+        const params = new URLSearchParams(window.location.search);
+        const origem = params.get("origem") || "convite-direto";
+
+        try {
+          const { error } = await supabaseClient
+            .from("rsvp2")
+            .insert([
+              { 
+                convidados: guests,
+                origem: origem,
+                mensagem: "" // Você pode adicionar um campo de mensagem no HTML se desejar
+              }
+            ]);
+
+          if (error) throw error;
+
+          feedback.textContent = "Confirmado com sucesso! Obrigado ❤";
+          feedback.dataset.status = "success";
+          submitBtn.textContent = "Enviado";
+        } catch (err) {
+          console.error("Erro ao salvar:", err);
+          feedback.textContent = "Erro ao confirmar. Tente novamente.";
+          submitBtn.disabled = false;
+        }
       });
     });
   </script>
